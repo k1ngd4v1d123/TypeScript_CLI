@@ -68,16 +68,19 @@ class LibraryManager {
     }
 
     returnBook(userId: number, bookId: number): string {
-        const user = this.users.find((u) => u.id === userId);
-        if (!user) return "User not found";
+    const user = this.users.find((u) => u.id === userId);
+    if (!user) return "User not found";
 
-        const index = user.borrowedBooks.findIndex((b) => b.id === bookId);
-        if (index === -1) return "Book not borrowed by this user";
+    const index = user.borrowedBooks.findIndex((b) => b.id === bookId);
+    if (index === -1) return "Book not borrowed by this user";
 
-        const [book] = user.borrowedBooks.splice(index, 1);
-        book.isAvailable = true;
-        return `${user.name} returned "${book.title}"`;
-    }
+    const [book] = user.borrowedBooks.splice(index, 1);
+    if (!book) return "Unexpected error"; // safety guard
+
+    book.isAvailable = true;
+    return `${user.name} returned "${book.title}"`;
+}
+
 }
 
 const library = new LibraryManager();
